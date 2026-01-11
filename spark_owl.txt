@@ -1,0 +1,37 @@
+PREFIX : <http://example.org/bookrec#>
+SELECT ?book ?title ?author
+WHERE {
+    ?book a :Book ;
+          :hasTitle ?title ;
+          :hasAuthor ?author .
+}
+
+PREFIX : <http://example.org/bookrec#>
+SELECT ?book ?title
+WHERE {
+    ?book :isSuitableForLevel :Beginner ;
+          :hasTitle ?title .
+}
+
+PREFIX : <http://example.org/bookrec#>
+SELECT ?user ?theme
+WHERE {
+    ?user a :User ;
+          :prefersTheme ?theme .
+}
+
+PREFIX : <http://example.org/bookrec#>
+SELECT ?book ?title
+WHERE {
+    ?book a :Book ;
+          :hasTheme :ScienceFiction ;
+          :isSuitableForLevel :Intermediate ;
+          :hasTitle ?title .
+}
+
+PREFIX : <http://example.org/bookrec#>
+SELECT ?theme (COUNT(?book) AS ?count)
+WHERE {
+    ?book :hasTheme ?theme .
+}
+GROUP BY ?theme

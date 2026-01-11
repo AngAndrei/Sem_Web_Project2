@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+    <a href="/"><- Back to Home (Upload/Preferences)</a>
+
+    <h1>Available Books</h1>
+    
+    <ul>
+        <li th:each="book : ${books}">
+            <a th:href="@{/book(uri=${book.uri})}" th:text="${book.title}">Title</a>
+        </li>
+    </ul>
+
+    <hr/>
+
+    <h2>Add a Book</h2>
+    <form action="/addBook" method="post">
+        Title: <input type="text" name="title" required placeholder="e.g. Harry Potter"/><br/>
+        Author: <input type="text" name="author" required placeholder="e.g. J.K. Rowling"/><br/>
+
+        Theme: <input type="text" name="theme" required placeholder="e.g. Fantasy"/><br/>
+        Level: <input type="text" name="level" required placeholder="e.g. Beginner"/><br/>
+        <button type="submit">Add Book</button>
+    </form>
+
+    <h2>Modify Book Level</h2>
+    <form action="/modifyBook" method="post">
+        Exact Title: <input type="text" name="title" required placeholder="e.g. Hunger Games"/><br/>
+        New Level: <input type="text" name="level" required placeholder="e.g. Intermediate"/><br/>
+        <button type="submit">Update Level</button>
+    </form>
+
+    <div th:replace="chat_fragment :: chatWidget"></div>
+</body>
+</html>

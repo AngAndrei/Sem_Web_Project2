@@ -1,0 +1,110 @@
+<div th:fragment="chatWidget" xmlns:th="http://www.thymeleaf.org">
+    <style>
+        #chat-circle {
+            position: fixed; bottom: 20px; right: 20px;
+            background: #007bff; color: white;
+            width: 60px; height: 60px; border-radius: 50%;
+            text-align: center; line-height: 60px; cursor: pointer;
+            box-shadow: 0px 4px 6px rgba(0,0,0,0.1); z-index: 9999;
+            font-size: 30px;
+        }
+        #chat-window {
+            display: none; position: fixed; bottom: 90px; right: 20px;
+            width: 350px; height: 450px; background: white;
+            border: 1px solid #ccc; border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0,0,0,0.2); z-index: 9999;
+            flex-direction: column;
+        }
+        #chat-header { background: #007bff; color: white; padding: 10px; border-radius: 10px 10px 0 0; font-weight: bold; }
+        #chat-messages { flex: 1; padding: 10px; overflow-y: auto; font-size: 14px; background: #f9f9f9; }
+        #chat-input-area { padding: 10px; border-top: 1px solid #eee; display: flex; }
+
+        .msg { margin: 5px 0; padding: 8px; border-radius: 5px; max-width: 80%; word-wrap: break-word; }
+        .user-msg { background: #dcf8c6; align-self: flex-end; margin-left: auto; }
+        .bot-msg { background: #ffffff; border: 1px solid #ddd; align-self: flex-start; }
+        .starter-btn { display: block; width: 100%; margin: 5px 0; padding: 8px; background: #e9ecef; border: none; cursor: pointer; text-align: left; font-size: 12px; border-radius: 4px; }
+        .starter-btn:hover { background: #dde2e6; }
+    </style>
+
+    <div id="chat-circle" onclick="toggleChat()">O</div>
+
+    <div id="chat-window">
+        <div id="chat-header">Book Assistant <span style="float:right;cursor:pointer" onclick="toggleChat()">✖</span></div>
+        <div id="chat-messages"></div>
+        <div id="chat-input-area">
+            <input type="text" id="chat-input" style="flex:1; padding: 5px;" placeholder="Ask..." onkeypress="handleKey(event)"/>
+            <button onclick="sendMessage()" style="margin-left:5px;">Send</button>
+        </div>
+    </div>
+
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        var context = "general";
+        var bookTitle = null;
+
+        if (/*[[${book != null}]]*/) {
+            context = "book_details";
+            bookTitle = /*[[${book != null ? book.get('hasTitle') : ''}]]*/ '';
+        }
+
+        function toggleChat() {
+            var win = document.getElementById('chat-window');
+            if (win.style.display === 'none' || win.style.display === '') {
+                win.style.display = 'flex';
+                if(document.getElementById('chat-messages').innerHTML === '') {
+                    loadStarters();
+                }
+            } else {
+                win.style.display = 'none';
+            }
+        }
+
+        function loadStarters() {
+            let url = `/api/chat/starters?context=${context}`;
+            if (bookTitle) url += `&bookTitle=${encodeURIComponent(bookTitle)}`;
+
+            fetch(url).then(res => res.json()).then(starters => {
+                let html = '<div class="bot-msg msg">Hello! How can I help you?</div>';
+                starters.forEach(s => {
+                    html += `<button class="starter-btn" onclick="sendStarter('${s}')">${s}</button>`;
+                });
+                document.getElementById('chat-messages').innerHTML = html;
+            });
+        }
+
+        function sendStarter(msg) {
+            document.getElementById('chat-input').value = msg;
+            sendMessage();
+        }
+
+        function handleKey(e) { if(e.key === 'Enter') sendMessage(); }
+
+        function appendMessage(text, isUser) {
+            const div = document.createElement('div');
+            div.className = isUser ? 'msg user-msg' : 'msg bot-msg';
+            div.innerText = text;
+            const container = document.getElementById('chat-messages');
+            container.appendChild(div);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('chat-input');
+            const txt = input.value.trim();
+            if(!txt) return;
+
+            appendMessage(txt, true);
+            input.value = '';
+
+            fetch('/api/chat/message', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({message: txt})
+            })
+            .then(res => res.json())
+            .then(data => appendMessage(data.response, false))
+            .catch(err => appendMessage("Error connecting to AI.", false));
+        }
+        /*]]>*/
+    </script>
+</div>

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Book Details</title>
+</head>
+<body>
+<h1>Book Details</h1>
+
+<div>
+    <p><strong>Title:</strong> <span th:text="${book['hasTitle']}">Title</span></p>
+
+    <p><strong>Author:</strong> <span th:text="${book['hasAuthor']}">Author</span></p>
+
+    <p><strong>Theme:</strong> <span th:text="${book['hasTheme']}">Theme</span></p>
+    <p><strong>Level:</strong> <span th:text="${book['isSuitableForLevel']}">Level</span></p>
+</div>
+
+<br/>
+<a href="/books">Back to Book List</a>
+
+<div th:replace="chat_fragment :: chatWidget"></div>
+</body>
+</html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<h1>Semantic Web App</h1>
+
+<h2>1. Upload Data</h2>
+<form action="/upload" method="post" enctype="multipart/form-data">
+    <input type="file" name="file" accept=".rdf,.xml" required>
+    <button type="submit">Upload and Visualize</button>
+</form>
+
+<hr/>
+
+<h2>2. Set Your Chat Preferences</h2>
+<p>Tell the chatbot who you are so it can recommend books for you.</p>
+<form action="/setPreferences" method="post">
+    Name: <input type="text" name="userName" placeholder="e.g. Alice" required/><br/>
+    Reading Level:
+    <select name="userLevel">
+        <option value="Beginner">Beginner</option>
+        <option value="Intermediate">Intermediate</option>
+        <option value="Advanced">Advanced</option>
+    </select><br/>
+    Preferred Theme: <input type="text" name="userTheme" placeholder="e.g. Science Fiction" required/><br/>
+    <button type="submit">Save Preferences</button>
+</form>
+
+<hr/>
+
+<br>
+<a href="/books">Skip to Book Management (Tasks 3 & 4)</a>
+
+<div th:replace="chat_fragment :: chatWidget"></div>
+</body>
+</html>

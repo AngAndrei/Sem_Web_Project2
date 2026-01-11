@@ -1,0 +1,73 @@
+@prefix : <http://example.org/bookrec#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@base <http://example.org/bookrec> .
+
+<http://example.org/bookrec> rdf:type owl:Ontology .
+
+
+:User rdf:type owl:Class .
+:Book rdf:type owl:Class .
+:Author rdf:type owl:Class .
+:ReadingLevel rdf:type owl:Class .
+:Theme rdf:type owl:Class .
+:hasReadingLevel rdf:type owl:ObjectProperty ;
+                 rdfs:domain :User ;
+                 rdfs:range :ReadingLevel .
+:isSuitableForLevel rdf:type owl:ObjectProperty ;
+                    rdfs:domain :Book ;
+                    rdfs:range :ReadingLevel .    
+:hasAuthor rdf:type owl:DatatypeProperty ;
+           rdfs:domain :Book ;
+           rdfs:range :Author .
+:prefersTheme rdf:type owl:ObjectProperty ;
+              rdfs:domain :User ;
+              rdfs:range :Theme .
+:hasTheme rdf:type owl:ObjectProperty ;
+          rdfs:domain :Book ;
+          rdfs:range :Theme .
+:hasTitle rdf:type owl:DatatypeProperty ;
+          rdfs:domain :Book ;
+          rdfs:range xsd:string .
+
+:Beginner rdf:type :ReadingLevel, owl:NamedIndividual .
+:Intermediate rdf:type :ReadingLevel, owl:NamedIndividual .
+:Advanced rdf:type :ReadingLevel, owl:NamedIndividual .
+
+:ScienceFiction rdf:type :Theme, owl:NamedIndividual .
+:Mystery rdf:type :Theme, owl:NamedIndividual .
+:Fantasy rdf:type :Theme, owl:NamedIndividual .
+:Murder rdf:type :Theme, owl:NamedIndividual .
+
+:FrankHerbert rdf:type :Author, owl:NamedIndividual .
+:AlexMichaelides rdf:type :Author, owl:NamedIndividual .
+:SuzanneCollins rdf:type :Author, owl:NamedIndividual .
+
+:Alice rdf:type :User, owl:NamedIndividual ;
+       :hasReadingLevel :Intermediate ;
+       :prefersTheme :ScienceFiction .
+
+:Bob rdf:type :User, owl:NamedIndividual ;
+     :hasReadingLevel :Beginner ;
+     :prefersTheme :Mystery .
+
+:Dune rdf:type :Book, owl:NamedIndividual ;
+      :hasTitle "Dune" ;
+      :hasAuthor :FrankHerbert ;
+      :hasTheme :ScienceFiction, :Fantasy ;
+      :isSuitableForLevel :Advanced .
+
+:TheSilentPatient rdf:type :Book, owl:NamedIndividual ;
+                  :hasTitle "The Silent Patient" ;
+                  ::hasAuthor :AlexMichaelides ;
+                  :hasTheme :Mystery, :Murder ;
+                  :isSuitableForLevel :Intermediate .
+
+:HungerGames rdf:type :Book, owl:NamedIndividual ;
+             :hasTitle "Hunger Games" ;
+             :hasAuthor :SuzanneCollins ;
+             :hasTheme :ScienceFiction, :Fantasy ;
+             :isSuitableForLevel :Beginner .

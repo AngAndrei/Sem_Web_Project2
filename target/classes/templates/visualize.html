@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>RDF Visualization</title>
+    <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+    <style type="text/css">
+        #mynetwork { width: 800px; height: 600px; border: 1px solid lightgray; }
+    </style>
+</head>
+<body>
+<h1>RDF Graph Visualization</h1>
+<div id="mynetwork"></div>
+
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    var rawData = /*[[${graphData}]]*/ [];
+
+    var nodes = new vis.DataSet();
+    var edges = new vis.DataSet();
+    var addedNodes = new Set();
+
+    rawData.forEach((item, index) => {
+        if (!addedNodes.has(item.subject)) {
+            nodes.add({id: item.subject, label: item.subject.split('#')[1] || item.subject});
+            addedNodes.add(item.subject);
+        }
+        if (!addedNodes.has(item.object)) {
+            nodes.add({id: item.object, label: item.object.split('#')[1] || item.object});
+            addedNodes.add(item.object);
+        }
+        edges.add({from: item.subject, to: item.object, label: item.predicate, arrows: 'to'});
+    });
+
+    var container = document.getElementById('mynetwork');
+    var data = { nodes: nodes, edges: edges };
+    var options = {};
+    var network = new vis.Network(container, data, options);
+    /*]]>*/
+</script>
+
+<a href="/books">Go to Book List</a>
+
+<div th:replace="chat_fragment :: chatWidget"></div>
+</body>
+</html>
