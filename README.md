@@ -1,5 +1,6 @@
 # Sem_Web_Project2
-Second project for the Web Semantic course at Politehnica Bucharest
+Book manager with chatbot + RAG.
+Second project for the Web Semantic course at Politehnica Bucharest.
 
 Team Members:
 Andreescu Ovidiu-Stefan
